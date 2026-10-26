@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+venv/
+.venv/
+env/
+
+# 环境变量与密钥（绝对不要提交）
+.env
+*.key
+config.local.py
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# 日志与数据
+*.log
+data/
+output/
