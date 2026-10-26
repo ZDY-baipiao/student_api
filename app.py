@@ -148,6 +148,15 @@ def student_stats(db: Session = Depends(get_db)):
     return {"total": total, "avg_age": round(float(avg_age), 1) if avg_age is not None else None}
 
 
+@app.get("/students/search", summary="按姓名模糊搜索学生")
+def search_students(keyword: str, db: Session = Depends(get_db)):
+    # keyword 是简单类型且不在路径里 → FastAPI 自动当作查询参数
+    # 前端这样调：GET /students/search?keyword=小
+    stmt = select(Student).where(Student.name.contains(keyword))
+    rows = db.execute(stmt).scalars().all()
+    return [{"id": s.id, "name": s.name, "age": s.age} for s in rows]
+
+
 @app.put("/students/{student_id}",summary="修改学生")
 def update_student(student_id: int, data: StudentUpdate, db: Session = Depends(get_db)):
     s = db.get(Student, student_id)                # 空3
