@@ -140,6 +140,14 @@ def list_students(clazz_id: int | None = None, db: Session = Depends(get_db)):
     rows = db.execute(stmt).scalars().all()
     return [{"id": s.id, "name": s.name, "age": s.age,"phone_num":s.phone_num ,"email":s.email ,"clazz_id": s.clazz_id} for s in rows]
 
+@app.get("/students/stats", summary="学生统计（总人数与平均年龄）")
+def student_stats(db: Session = Depends(get_db)):
+    from sqlalchemy import func
+    total = db.execute(select(func.count()).select_from(Student)).scalar_one()
+    avg_age = db.execute(select(func.avg(Student.age))).scalar_one()
+    return {"total": total, "avg_age": round(float(avg_age), 1) if avg_age is not None else None}
+
+
 @app.put("/students/{student_id}",summary="修改学生")
 def update_student(student_id: int, data: StudentUpdate, db: Session = Depends(get_db)):
     s = db.get(Student, student_id)                # 空3
