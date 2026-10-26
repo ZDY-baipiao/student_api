@@ -140,6 +140,15 @@ def list_students(clazz_id: int | None = None, db: Session = Depends(get_db)):
     rows = db.execute(stmt).scalars().all()
     return [{"id": s.id, "name": s.name, "age": s.age,"phone_num":s.phone_num ,"email":s.email ,"clazz_id": s.clazz_id} for s in rows]
 
+@app.get("/students/search", summary="按姓名模糊搜索学生")
+def search_students(keyword: str, db: Session = Depends(get_db)):
+    # keyword 是简单类型且不在路径里 → FastAPI 自动当作查询参数
+    # 前端这样调：GET /students/search?keyword=小
+    stmt = select(Student).where(Student.name.contains(keyword))
+    rows = db.execute(stmt).scalars().all()
+    return [{"id": s.id, "name": s.name, "age": s.age} for s in rows]
+
+
 @app.put("/students/{student_id}",summary="修改学生")
 def update_student(student_id: int, data: StudentUpdate, db: Session = Depends(get_db)):
     s = db.get(Student, student_id)                # 空3
