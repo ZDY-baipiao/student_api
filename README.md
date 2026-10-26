@@ -89,3 +89,4 @@ curl -X POST http://127.0.0.1:8003/students \
 - [ ] 数据库连接信息改为从环境变量读取
 - [ ] 增加分页与模糊搜索
 - [ ] 补充 pytest 接口测试
+- [ ] 接入 GitHub Actions 自动跑测试
